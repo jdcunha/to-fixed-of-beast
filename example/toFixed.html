@@ -1,0 +1,127 @@
+<script src="../tinytest.js"></script>
+<script>
+/*
+ * to reverse a string we convert it into a an array of characters, reverse it using the array function and then compact it again  
+ */
+function reverseString(currentString) {
+    return currentString.split("").reverse().join("");
+}
+/*
+ * If the precision is positive 
+ *   - Identifies the new decimal position 
+ *   - moves the decimal point to the right based on the precision value
+ *   - pads 0 if the precision value greater than the length of the value as a string
+ *
+ * If the precision is negative
+ *   - reverses the string
+ *   - Identifies the new decimal position 
+ *   - moves the decimal point to the right based on the precision value
+ *   - reverses the string to bring it back to it's original value
+ *   - removes any leading 0 in the whole number part of the string 
+ */
+function getExponentialForm(value,precision){
+	var exponentialForm = "";
+	
+	//Identify if the precision is positive or negative
+	var negativePrecisionFlag = (precision < 0) ? true:false;
+
+	//Convert number to string
+	value = "" + value; 
+    
+    //If negative precision then reverse the string
+	if(negativePrecisionFlag) value = reverseString(value);
+    
+    //Find the position of the decimal point
+	var positionOfDecimal = value.search(/[.]/g);
+
+	//set position of decimal if it's a whole number
+	if(positionOfDecimal === -1)
+	  positionOfDecimal = (negativePrecisionFlag)  ? 0:value.length;
+
+	//Identify the new decimal position
+	var newPositionOfDecimal = positionOfDecimal + Math.abs(precision);
+	
+	//Remove the decimal from the string
+	value  = value.replace(/[.]/g, '');
+
+	//If negative precision then we set the initial postion at where the the decimal is on the reversed string
+	var initialPosition = (negativePrecisionFlag) ?  positionOfDecimal:0;
+
+	//If the new position of the decimal is greater than string length then we updated the new string length
+	var exponentialFormStringLength = (newPositionOfDecimal > value.length) ?  newPositionOfDecimal:value.length;
+	
+	//If negative precision then we set the exponentialForm with all the text prior to the decimal point
+	exponentialForm = (negativePrecisionFlag) ?  value.substr(0,initialPosition):"";
+	
+	//Format the string 
+	for(var i=initialPosition; i<= exponentialFormStringLength; i++){
+	  if(i != newPositionOfDecimal && i < value.length){ 
+		 exponentialForm += value.charAt(i);
+	  }
+
+	  if(i === newPositionOfDecimal && i < value.length){ 
+		exponentialForm += "." + value.charAt(i);
+	  }
+	  
+	  if(i === newPositionOfDecimal && i >= value.length){ 
+		exponentialForm += ".";
+	  }
+      
+      //pad 0 if the current positon has exceed the actual length of the string
+	  if(i >= value.length){
+		 exponentialForm += "0";   
+	  }
+  
+	}
+   
+   //Undo the reverse when we have a negativePrecisionFlag
+   if(negativePrecisionFlag) exponentialForm = reverseString(exponentialForm);
+
+   //Remove the leading 0 in the whole number part (substring prior to the decimal - this gets executed only when the negativePrecision is true)
+   exponentialForm  = exponentialForm.replace(/^0(?=\d)/, '');
+
+   return exponentialForm;
+		   
+};
+
+function toFixed(value, precision) {
+	var exponentialForm = getExponentialForm(value,precision); 
+	var rounded = Math.round(exponentialForm);
+	
+	var finalResult = getExponentialForm(rounded, precision* -1);
+	return finalResult;
+}
+
+
+tests({
+  'Should set the precision correctly: ':function(){
+		eq(toFixed(0.512,2),'0.51');
+		eq(toFixed(9.467869,4),'9.4679');
+		
+  },
+  
+  'Should address binary rounding issues: ':function(){
+        toFixed(0.0099,3);
+        toFixed(0.999,2)
+		eq(toFixed(0.615,2),'0.62');
+		eq(toFixed(10.6666,3),'10.667');
+		eq(toFixed(0.001,1),'0.0');
+		eq(toFixed(0.000018,5),'0.00002');
+		
+  },
+  
+  'Should work with whole number without decimals: ':function(){
+		eq(toFixed(2,2),'2.00');
+		eq(toFixed(900,3),'900.000');
+		eq(toFixed(5000,5),'5000.00000');
+		
+  },
+  
+  'Should work with precision greater than the fractional part length: ':function(){
+		eq(toFixed(0.000012,10),'0.0000120000');
+		
+  },
+  
+}); 
+
+</script>
