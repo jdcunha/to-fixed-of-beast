@@ -95,30 +95,30 @@ function toFixed(value, precision) {
 
 tests({
   'Should set the precision correctly: ':function(){
-		eq(toFixed(0.512,2),'0.51');
-		eq(toFixed(9.467869,4),'9.4679');
+        eq(toFixed(0.512,2),'0.51');
+	eq(toFixed(9.467869,4),'9.4679');
 		
   },
   
   'Should address binary rounding issues: ':function(){
         toFixed(0.0099,3);
         toFixed(0.999,2)
-		eq(toFixed(0.615,2),'0.62');
-		eq(toFixed(10.6666,3),'10.667');
-		eq(toFixed(0.001,1),'0.0');
-		eq(toFixed(0.000018,5),'0.00002');
+	eq(toFixed(0.615,2),'0.62');
+	eq(toFixed(10.6666,3),'10.667');
+	eq(toFixed(0.001,1),'0.0');
+	eq(toFixed(0.000018,5),'0.00002');
 		
   },
   
   'Should work with whole number without decimals: ':function(){
-		eq(toFixed(2,2),'2.00');
-		eq(toFixed(900,3),'900.000');
-		eq(toFixed(5000,5),'5000.00000');
+	eq(toFixed(2,2),'2.00');
+	eq(toFixed(900,3),'900.000');
+	eq(toFixed(5000,5),'5000.00000');
 		
   },
   
   'Should work with precision greater than the fractional part length: ':function(){
-		eq(toFixed(0.000012,10),'0.0000120000');
+	eq(toFixed(0.000012,10),'0.0000120000');
 		
   },
   
