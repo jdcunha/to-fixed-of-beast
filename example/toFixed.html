@@ -4,7 +4,7 @@
  * to reverse a string we convert it into a an array of characters, reverse it using the array function and then compact it again  
  */
 function reverseString(currentString) {
-    return currentString.split("").reverse().join("");
+        return currentString.split("").reverse().join("");
 }
 /*
  * If the precision is positive 
@@ -28,10 +28,10 @@ function getExponentialForm(value,precision){
 	//Convert number to string
 	value = "" + value; 
     
-    //If negative precision then reverse the string
+        //If negative precision then reverse the string
 	if(negativePrecisionFlag) value = reverseString(value);
     
-    //Find the position of the decimal point
+        //Find the position of the decimal point
 	var positionOfDecimal = value.search(/[.]/g);
 
 	//set position of decimal if it's a whole number
@@ -67,20 +67,20 @@ function getExponentialForm(value,precision){
 		exponentialForm += ".";
 	  }
       
-      //pad 0 if the current positon has exceed the actual length of the string
+          //pad 0 if the current positon has exceed the actual length of the string
 	  if(i >= value.length){
 		 exponentialForm += "0";   
 	  }
   
 	}
    
-   //Undo the reverse when we have a negativePrecisionFlag
-   if(negativePrecisionFlag) exponentialForm = reverseString(exponentialForm);
+       //Undo the reverse when we have a negativePrecisionFlag
+       if(negativePrecisionFlag) exponentialForm = reverseString(exponentialForm);
 
-   //Remove the leading 0 in the whole number part (substring prior to the decimal - this gets executed only when the negativePrecision is true)
-   exponentialForm  = exponentialForm.replace(/^0(?=\d)/, '');
+       //Remove the leading 0 in the whole number part (substring prior to the decimal - this gets executed only when the negativePrecision is true)
+       exponentialForm  = exponentialForm.replace(/^0(?=\d)/, '');
 
-   return exponentialForm;
+       return exponentialForm;
 		   
 };
 
